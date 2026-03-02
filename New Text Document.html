@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python 3.12 Senior Pro - For Phuc</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap');
+        body { font-family: 'Segoe UI', sans-serif; background-color: #020617; }
+        .code-font { font-family: 'Fira Code', monospace; }
+        .senior-border { border: 2px solid transparent; background-image: linear-gradient(#020617, #020617), linear-gradient(to right, #3b82f6, #8b5cf6); background-origin: border-box; background-clip: padding-box, border-box; }
+    </style>
+</head>
+<body class="text-slate-200 min-h-screen">
+
+    <div id="loader" class="fixed inset-0 bg-slate-950 z-50 flex flex-col items-center justify-center text-center">
+        <div class="w-20 h-20 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mb-6"></div>
+        <p class="text-purple-400 font-black text-xl tracking-widest uppercase italic">Upgrading to Senior Environment...</p>
+        <p class="text-slate-500 text-sm mt-2 font-mono">Đang nạp Python 3.12 WebAssembly. Đợi tí nhé Phúc!</p>
+    </div>
+
+    <div class="max-w-7xl mx-auto p-4 lg:p-8">
+        <header class="mb-8 flex justify-between items-center bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+            <div>
+                <h1 class="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 italic">SENIOR PYTHON IDE</h1>
+                <p class="text-slate-500 font-mono text-xs mt-1">Status: High Performance | No more "brhh" errors</p>
+            </div>
+            <div class="text-right">
+                <div id="total-score" class="text-4xl font-black text-yellow-500">0</div>
+                <div class="text-[10px] text-slate-500 uppercase font-bold">Senior Points</div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Task Panel -->
+            <div class="lg:col-span-4 space-y-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl">
+                    <h2 class="text-sm font-black text-slate-400 mb-4 tracking-[0.2em] uppercase">Missions (5 Levels)</h2>
+                    <div id="task-list" class="space-y-3"></div>
+                </div>
+
+                <div class="bg-blue-900/10 border border-blue-500/20 rounded-2xl p-4">
+                    <h3 class="text-xs font-bold text-blue-400 mb-2 italic">Senior's Tip:</h3>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        Đừng bao giờ ép kiểu trực tiếp `int(float_val)` nếu muốn làm tròn lên. Hãy dùng `math.ceil()` hoặc f-string để định dạng số đẹp mắt. Tên biến có thể dùng Tiếng Việt (Unicode) trong Python 3 nhưng Senior thường dùng snake_case nhé!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Editor & Real-time Check -->
+            <div class="lg:col-span-8 space-y-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col h-[680px]">
+                    <div class="bg-slate-800/80 px-5 py-3 flex justify-between items-center border-b border-slate-700">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                            <span class="ml-4 text-xs font-mono text-slate-400 uppercase tracking-widest" id="task-title">Chưa chọn bài</span>
+                        </div>
+                        <button onclick="runPython()" id="run-btn" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-8 py-2 rounded-xl font-black shadow-lg transition-all transform active:scale-95 disabled:opacity-50">
+                            DEPLOY & TEST
+                        </button>
+                    </div>
+                    
+                    <textarea id="editor" class="flex-grow w-full p-6 bg-[#020617] text-blue-100 code-font outline-none resize-none leading-relaxed text-base" spellcheck="false" placeholder="# Viết code đẳng cấp Senior tại đây..."></textarea>
+                    
+                    <div class="bg-black/95 p-5 h-56 overflow-y-auto border-t border-slate-800">
+                        <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-1">
+                            <span class="text-[10px] text-slate-500 font-black tracking-widest">REAL-TIME CONSOLE</span>
+                            <span id="senior-badge" class="hidden text-[10px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black italic">SENIOR DETECTED</span>
+                        </div>
+                        <div id="console" class="code-font text-sm leading-7"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tasks = [
+            {
+                id: 0,
+                title: "Bài 1: Chống lỗ tiền Net",
+                desc: "Cho `gio = '4.5'`. Tính tiền giá 5000đ/h. Yêu cầu: Làm tròn LÊN thành 25000 (không được để ra 20000). In ra bằng f-string.",
+                template: "import math\ngio = '4.5'\ngia = 5000\n# Gợi ý: math.ceil(float(gio)) * gia\n",
+                check: (code, out) => out.includes("25000") && (code.includes('f"') || code.includes("f'"))
+            },
+            {
+                id: 1,
+                title: "Bài 2: In tên chuẩn Senior",
+                desc: "Khai báo `name = 'Phúc'`, `năm = 2007`. In ra: 'Phúc sinh năm 2007' bằng f-string.",
+                template: "name = \"Phúc\"\nnăm = 2007\n# Dùng f-string in ra đúng cú pháp cậu yêu cầu\n",
+                check: (code, out) => out.includes("Phúc sinh năm 2007") && code.includes("f\"")
+            },
+            {
+                id: 2,
+                title: "Bài 3: Ép kiểu bậc cao",
+                desc: "Cho `data = '9.99'`. Ép về `int` sao cho kết quả ra `10` (làm tròn). In ra: 'Kết quả: 10'",
+                template: "import math\ndata = '9.99'\n# Xử lý làm tròn chuẩn mực\n",
+                check: (code, out) => out.includes("Kết quả: 10")
+            },
+            {
+                id: 3,
+                title: "Bài 4: Format tiền tệ",
+                desc: "Biến `tien = 1000000`. In ra: 'Số dư: 1,000,000 VND' (Dùng f-string format :,)",
+                template: "tien = 1000000\n# Gợi ý: f'{tien:,} VND'\n",
+                check: (code, out) => out.includes("1,000,000 VND")
+            },
+            {
+                id: 4,
+                title: "Bài 5: Senior Logic",
+                desc: "Cho `a = '10'`, `b = '20'`. Tính tổng nhưng phải in ra: 'Tổng là: 30.0' (kết quả là float).",
+                template: "a = '10'\nb = '20'\n# Một dòng f-string duy nhất xử lý ép kiểu\n",
+                check: (code, out) => out.includes("Tổng là: 30.0")
+            }
+        ];
+
+        let pyodide;
+        let scores = [0,0,0,0,0];
+        let currentId = -1;
+
+        async function init() {
+            pyodide = await loadPyodide();
+            document.getElementById('loader').style.display = 'none';
+            render();
+        }
+
+        function render() {
+            const list = document.getElementById('task-list');
+            list.innerHTML = tasks.map(t => `
+                <div onclick="selectTask(${t.id})" id="t-${t.id}" class="p-3 rounded-xl border border-slate-800 bg-slate-900/50 cursor-pointer hover:border-purple-500/50 transition-all">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-300">${t.title}</span>
+                        <span class="text-[10px] font-black text-slate-600" id="s-${t.id}">0/10</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectTask(id) {
+            currentId = id;
+            document.getElementById('task-title').innerText = tasks[id].title;
+            document.getElementById('editor').value = tasks[id].template;
+            tasks.forEach(t => document.getElementById(`t-${t.id}`).classList.remove('senior-border'));
+            document.getElementById(`t-${id}`).classList.add('senior-border');
+        }
+
+        async function runPython() {
+            if(currentId === -1) return;
+            const code = document.getElementById('editor').value;
+            const consoleBox = document.getElementById('console');
+            const seniorBadge = document.getElementById('senior-badge');
+            
+            consoleBox.innerHTML = "<div class='text-slate-500 animate-pulse'>Executing...</div>";
+            pyodide.runPython(`import sys, io; sys.stdout = io.StringIO()`);
+
+            try {
+                await pyodide.runPythonAsync(code);
+                const out = pyodide.runPython("sys.stdout.getvalue()").trim();
+                consoleBox.innerHTML = "";
+                
+                if(out) {
+                    out.split('\n').forEach(l => {
+                        consoleBox.innerHTML += `<div class="text-blue-400">>>> ${l}</div>`;
+                    });
+
+                    const isCorrect = tasks[currentId].check(code, out);
+                    const isFString = code.includes('f"') || code.includes("f'");
+                    
+                    if(isCorrect) {
+                        const score = isFString ? 10 : 7;
+                        scores[currentId] = score;
+                        if(isFString) seniorBadge.classList.remove('hidden');
+                        consoleBox.innerHTML += `<div class="text-green-500 font-bold mt-2">✨ SUCCESS: ${score}/10! ${isFString ? 'Cú pháp chuẩn Senior!' : 'Đúng rồi nhưng Senior nên dùng f-string.'}</div>`;
+                    } else {
+                        consoleBox.innerHTML += `<div class="text-red-500 font-bold mt-2 italic">!! SAI RỒI PHÚC ƠI. Xem lại logic làm tròn hoặc f-string !!</div>`;
+                    }
+                }
+            } catch(e) {
+                consoleBox.innerHTML = `<div class="text-red-400 bg-red-900/20 p-2 rounded border border-red-500/50">Lỗi cú pháp "brhh":<br>${e.message}</div>`;
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            const total = scores.reduce((a,b) => a+b, 0);
+            document.getElementById('total-score').innerText = total;
+            scores.forEach((s, i) => {
+                const badge = document.getElementById(`s-${i}`);
+                if(badge) {
+                    badge.innerText = `${s}/10`;
+                    badge.className = `text-[10px] font-black ${s===10 ? 'text-green-500' : (s>0 ? 'text-yellow-500' : 'text-slate-600')}`;
+                }
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+# Bot dependencies (Oniichan)
+# RAG Nội Sinh — FAISS + Embedding (dùng faiss-cpu cho server 3GB RAM)
+faiss-cpu>=1.7.4
+sentence-transformers>=2.2.0
+numpy>=1.21.0
+# RAG Trên Mạng
+duckduckgo-search>=4.0.0

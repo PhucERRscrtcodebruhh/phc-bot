@@ -1,0 +1,635 @@
+<!-- Chosen Palette: Warm Neutrals with Vibrant Accents (Stone, Orange, Emerald, Violet) -->
+
+<!-- Application Structure Plan: The SPA is designed as an interactive 'Learning Hub' or 'Mission Control'. Instead of a linear document, it uses a Tabbed Dashboard layout. 1. 'Home / Why Python': Introduces the language and its philosophy. 2. 'Basics & Syntax': Uses an interactive 'Code Card' grid where users click to reveal specific syntax rules and examples (Variables, Numbers, Strings). 3. 'Data Structures': Visualizes Python collections (List, Dict, etc.) using a Chart.js Bar Chart to compare their 'Utility' and properties conceptually. 4. 'Logic Lab': Gamifies the If/Else and Loop examples. Users input data (money, passwords) to see the logic execute in real-time, mirroring the document's examples. 5. 'Game Dev (Pygame)': Visualizes the Game Loop using a CSS-based cyclic diagram. 6. 'Reality Check': Uses a Chart.js Horizontal Bar Chart to vividly demonstrate the performance gap between Python and C++. This structure transforms passive reading into active experimentation, aligning with the 'Monkey Code' philosophy of 'code runnable, understand root cause'. -->
+
+<!-- Visualization & Content Choices: 1. Data Collections Comparison: Goal -> Compare. Method -> Chart.js Bar Chart. Comparison of 'Flexibility', 'Speed', and 'Strictness' for List, Tuple, Set, Dict based on text descriptions. 2. Logic Simulations: Goal -> Inform/Interact. Method -> HTML Inputs + JS Logic. Directly implements the 'Money for Net' and 'Password Check' examples to make them playable. 3. Game Loop Architecture: Goal -> Organize/Process. Method -> Structured HTML/CSS Diagram (Flexbox/Borders). Shows the flow Init -> Event -> Logic -> Draw -> Update. 4. Performance Comparison: Goal -> Compare. Method -> Chart.js Horizontal Bar Chart. Visualizes Python vs C++ speed/memory differences mentioned in the 'Dark Side' section. CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<!DOCTYPE html>
+
+<html lang="vi"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Python Monkey Code: Học Lập Trình Thực Chiến</title> <script src="https://cdn.tailwindcss.com"></script> <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"> <style> body { font-family: 'Roboto', sans-serif; background-color: #F5F5F4; color: #1C1917; } .font-code { font-family: 'Fira Code', monospace; } .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 300px; max-height: 400px; } .active-tab { background-color: #EA580C; color: white; border-bottom: 4px solid #9A3412; } .inactive-tab { background-color: white; color: #4B5563; border-bottom: 4px solid transparent; } .inactive-tab:hover { background-color: #F3F4F6; color: #EA580C; } /* Custom Scrollbar for code blocks */ .code-scroll::-webkit-scrollbar { height: 8px; } .code-scroll::-webkit-scrollbar-track { background: #1f2937; } .code-scroll::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+
+    /* CSS Flowchart Arrows */
+    .arrow-right {
+        width: 0; 
+        height: 0; 
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-left: 15px solid #6B7280;
+    }
+    .arrow-down {
+        width: 0; 
+        height: 0; 
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 15px solid #6B7280;
+    }
+</style>
+</head> <body class="flex flex-col min-h-screen">
+
+<!-- Navigation -->
+<nav class="sticky top-0 z-50 bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex items-center">
+                <span class="text-2xl font-bold text-orange-600">🐒 Monkey Code</span>
+            </div>
+            <div class="hidden md:flex space-x-2 items-center" id="nav-container">
+                <!-- Nav items injected by JS -->
+            </div>
+            <!-- Mobile Menu Button -->
+            <div class="flex items-center md:hidden">
+                <button id="mobile-menu-btn" class="text-gray-500 hover:text-orange-600 focus:outline-none">
+                    <span class="text-2xl">☰</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+        <div class="flex flex-col p-2 space-y-1" id="mobile-nav-container">
+            <!-- Mobile Nav items injected by JS -->
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content Area -->
+<main class="flex-grow container mx-auto px-4 py-8 max-w-6xl">
+    
+    <!-- View: Intro -->
+    <div id="view-intro" class="view-section animate-fade-in">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 mb-4">Chào mừng đến với <span class="text-orange-600">Monkey Code</span></h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">Code chạy được, hiểu bản chất từ gốc rễ và biến những ý tưởng điên rồ thành game.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-emerald-500 transform hover:-translate-y-1 transition duration-300">
+                <div class="text-3xl mb-4">📖</div>
+                <h3 class="text-xl font-bold mb-2">Dễ Đọc Kinh Ngạc</h3>
+                <p class="text-gray-600">Quên đi dấu chấm phẩy và ngoặc nhọn. Python dùng khoảng trắng để code sạch sẽ và dễ bảo trì.</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-500 transform hover:-translate-y-1 transition duration-300">
+                <div class="text-3xl mb-4">🛒</div>
+                <h3 class="text-xl font-bold mb-2">Hệ Sinh Thái Khổng Lồ</h3>
+                <p class="text-gray-600">Làm Web (Django), AI (TensorFlow), hay Game (Pygame). Cộng đồng đã làm sẵn cho bạn.</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-violet-500 transform hover:-translate-y-1 transition duration-300">
+                <div class="text-3xl mb-4">⚡</div>
+                <h3 class="text-xl font-bold mb-2">Thông Dịch Ngay</h3>
+                <p class="text-gray-600">Viết dòng nào chạy dòng đó. Thử sai nhanh chóng, không cần biên dịch lâu la.</p>
+            </div>
+        </div>
+
+        <div class="bg-orange-50 rounded-xl p-8 border border-orange-200 text-center">
+            <h2 class="text-2xl font-bold text-orange-800 mb-4">Sẵn sàng nhập môn?</h2>
+            <p class="text-orange-700 mb-6">Hãy bắt đầu hành trình từ những dòng code đầu tiên cho đến khi tự làm game.</p>
+            <button onclick="switchTab('syntax')" class="bg-orange-600 text-white px-8 py-3 rounded-full font-bold hover:bg-orange-700 transition shadow-md">Bắt Đầu Học Ngay</button>
+        </div>
+    </div>
+
+    <!-- View: Syntax & Basics -->
+    <div id="view-syntax" class="view-section hidden">
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Cú Pháp & Cơ Bản</h2>
+            <p class="text-lg text-gray-600">Nền móng vững chắc cho mọi chương trình. Nhớ kỹ: <strong>Thụt đầu dòng là linh hồn.</strong></p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Interactive Concept List -->
+            <div class="space-y-4">
+                <button onclick="showCode('syntax')" class="w-full text-left p-4 bg-white rounded-lg shadow border border-gray-200 hover:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-lg text-gray-800">1. Luật Chơi Tối Thượng (Syntax)</span>
+                        <span class="text-orange-500">➜</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">Khoảng trắng, Indentation và dấu hai chấm.</p>
+                </button>
+
+                <button onclick="showCode('variables')" class="w-full text-left p-4 bg-white rounded-lg shadow border border-gray-200 hover:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-lg text-gray-800">2. Biến (Variables)</span>
+                        <span class="text-orange-500">➜</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">Những chiếc hộp linh hoạt, không cần khai báo kiểu.</p>
+                </button>
+
+                <button onclick="showCode('numbers')" class="w-full text-left p-4 bg-white rounded-lg shadow border border-gray-200 hover:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-lg text-gray-800">3. Số & Ép Kiểu (Casting)</span>
+                        <span class="text-orange-500">➜</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">Int, Float và nghệ thuật biến chữ thành số.</p>
+                </button>
+
+                 <button onclick="showCode('strings')" class="w-full text-left p-4 bg-white rounded-lg shadow border border-gray-200 hover:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-lg text-gray-800">4. Xử Lý Chuỗi (Strings)</span>
+                        <span class="text-orange-500">➜</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">Cắt chuỗi, f-string và các phép nối.</p>
+                </button>
+            </div>
+
+            <!-- Code Viewer Display -->
+            <div class="bg-gray-900 rounded-xl shadow-2xl overflow-hidden flex flex-col h-full min-h-[400px]">
+                <div class="bg-gray-800 px-4 py-2 flex items-center space-x-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span id="code-title" class="ml-4 text-gray-400 text-sm font-mono">syntax_example.py</span>
+                </div>
+                <div class="p-6 overflow-x-auto code-scroll flex-grow">
+                    <pre id="code-content" class="font-code text-green-400 text-sm leading-relaxed"></pre>
+                </div>
+                <div id="code-explanation" class="bg-gray-800 p-4 text-gray-300 text-sm border-t border-gray-700 italic">
+                    Chọn một chủ đề bên trái để xem code mẫu.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View: Data Structures -->
+    <div id="view-data" class="view-section hidden">
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Mảng (Collections)</h2>
+            <p class="text-lg text-gray-600">Tủ chứa đồ đa năng của Python. Mỗi loại có một siêu năng lực riêng.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-8">
+            <div>
+                 <p class="mb-4 text-gray-700">So sánh tính chất của 4 loại Collection chính:</p>
+                <ul class="space-y-3">
+                    <li class="flex items-center bg-white p-3 rounded shadow-sm">
+                        <span class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold mr-3">L</span>
+                        <div>
+                            <strong>List []:</strong> Thay đổi được, có thứ tự.
+                            <span class="block text-xs text-gray-500">Dùng cho danh sách item game, tên người.</span>
+                        </div>
+                    </li>
+                    <li class="flex items-center bg-white p-3 rounded shadow-sm">
+                        <span class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold mr-3">T</span>
+                        <div>
+                            <strong>Tuple ():</strong> Đóng băng, không sửa được.
+                            <span class="block text-xs text-gray-500">Dùng cho tọa độ cố định.</span>
+                        </div>
+                    </li>
+                    <li class="flex items-center bg-white p-3 rounded shadow-sm">
+                        <span class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold mr-3">D</span>
+                        <div>
+                            <strong>Dict {}:</strong> Tra cứu nhanh (Key-Value).
+                            <span class="block text-xs text-gray-500">Dùng lưu thông tin nhân vật, config.</span>
+                        </div>
+                    </li>
+                    <li class="flex items-center bg-white p-3 rounded shadow-sm">
+                        <span class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold mr-3">S</span>
+                        <div>
+                            <strong>Set {}:</strong> Không trùng lặp.
+                            <span class="block text-xs text-gray-500">Dùng lọc giá trị duy nhất.</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- Chart Container -->
+            <div class="bg-white p-4 rounded-xl shadow border border-gray-200">
+                <h3 class="text-center font-bold text-gray-700 mb-2">Đặc Tính Kỹ Thuật</h3>
+                <div class="chart-container">
+                    <canvas id="collectionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View: Logic & Loops -->
+    <div id="view-logic" class="view-section hidden">
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Phòng Thí Nghiệm Logic</h2>
+            <p class="text-lg text-gray-600">Trực tiếp trải nghiệm cách máy tính "tư duy" qua các ví dụ thực tế trong giáo trình.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- If/Else Simulator -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <div class="bg-indigo-600 p-4 text-white">
+                    <h3 class="font-bold text-lg">1. If/Else: Đi Net Hay Về Nhà?</h3>
+                    <p class="text-xs text-indigo-200 opacity-80">Logic rẽ nhánh dựa trên số tiền.</p>
+                </div>
+                <div class="p-6">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tiền trong ví (VNĐ):</label>
+                        <input type="number" id="net-money" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:outline-none" value="15000" placeholder="Nhập số tiền...">
+                    </div>
+                    <div class="flex space-x-2 mb-4">
+                        <button onclick="checkNetMoney()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Kiểm Tra</button>
+                    </div>
+                    <div id="net-result" class="bg-gray-100 p-4 rounded border-l-4 border-gray-400 text-gray-700 min-h-[60px] flex items-center">
+                        Kết quả sẽ hiện ở đây...
+                    </div>
+                    <div class="mt-4 bg-gray-900 rounded p-3 text-xs font-mono text-green-400">
+                        if tien >= 15000: print("Triển thôi!")<br>
+                        elif tien >= 5000: print("Chơi 1 tiếng")<br>
+                        else: print("Về nhà học")
+                    </div>
+                </div>
+            </div>
+
+            <!-- While Loop Simulator -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <div class="bg-emerald-600 p-4 text-white">
+                    <h3 class="font-bold text-lg">2. While Loop: Bẻ Khóa Server</h3>
+                    <p class="text-xs text-emerald-200 opacity-80">Lặp cho đến khi điều kiện đúng (Pass: anhphuc2k7)</p>
+                </div>
+                <div class="p-6">
+                     <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nhập mật khẩu:</label>
+                        <input type="text" id="server-pass" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Gợi ý: anhphuc...">
+                    </div>
+                    <div class="flex space-x-2 mb-4">
+                        <button onclick="checkPassword()" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition">Đăng Nhập</button>
+                    </div>
+                    <div id="pass-result" class="bg-gray-100 p-4 rounded border-l-4 border-gray-400 text-gray-700 min-h-[60px] flex items-center">
+                        Trạng thái: Đang chờ...
+                    </div>
+                    <div class="mt-4 bg-gray-900 rounded p-3 text-xs font-mono text-green-400">
+                        while input != "anhphuc2k7":<br>
+                        &nbsp;&nbsp;print("Sai rồi!")<br>
+                        print("Đã kết nối 10 chip Exynos...")
+                    </div>
+                </div>
+            </div>
+
+            <!-- For Loop Simulator -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden lg:col-span-2">
+                <div class="bg-orange-600 p-4 text-white">
+                    <h3 class="font-bold text-lg">3. For Loop: Điểm Danh Hội Bạn</h3>
+                    <p class="text-xs text-orange-200 opacity-80">Duyệt qua từng phần tử trong danh sách.</p>
+                </div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-sm font-medium text-gray-700 mb-2">Danh sách bạn bè:</p>
+                        <ul class="list-disc list-inside bg-gray-50 p-4 rounded border border-gray-200 text-sm text-gray-600 font-mono mb-4">
+                            <li>"Thành béo"</li>
+                            <li>"Nhật Nam"</li>
+                            <li>"Tuấn công nghệ"</li>
+                            <li>"Inka"</li>
+                        </ul>
+                        <button onclick="runRollCall()" class="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 transition w-full">Chạy Điểm Danh</button>
+                    </div>
+                    <div class="bg-gray-900 rounded p-4 font-mono text-sm text-green-400 overflow-y-auto max-h-48" id="loop-output">
+                        > Chờ lệnh chạy...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View: Pygame -->
+    <div id="view-pygame" class="view-section hidden">
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Pygame: Kiến Trúc Game Loop</h2>
+            <p class="text-lg text-gray-600">Mọi trò chơi đều là một vòng lặp vĩnh cửu: <strong>Tính toán -> Vẽ -> Lặp lại.</strong></p>
+        </div>
+
+        <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200 relative overflow-hidden">
+            <!-- Concept Diagram using HTML/CSS -->
+            <div class="flex flex-col md:flex-row justify-between items-center max-w-4xl mx-auto space-y-6 md:space-y-0">
+                
+                <!-- Node 1 -->
+                <div class="flex flex-col items-center z-10">
+                    <div class="w-32 h-32 bg-gray-800 text-white rounded-full flex flex-col items-center justify-center border-4 border-blue-500 shadow-xl">
+                        <span class="text-2xl font-bold">INIT</span>
+                        <span class="text-xs text-blue-200 mt-1">Setup</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2 text-center w-32">Khởi tạo màn hình & Biến</p>
+                </div>
+
+                <!-- Connector -->
+                <div class="hidden md:block arrow-right"></div>
+                <div class="md:hidden arrow-down"></div>
+
+                <!-- The Loop Container -->
+                <div class="border-4 border-dashed border-orange-500 p-6 rounded-2xl bg-orange-50 w-full md:w-auto relative">
+                    <span class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-3 py-1 text-sm font-bold rounded-full">WHILE RUNNING</span>
+                    
+                    <div class="flex flex-col space-y-4">
+                        <div class="flex items-center space-x-4 bg-white p-3 rounded shadow-sm border-l-4 border-green-500">
+                            <span class="text-2xl">👂</span>
+                            <div>
+                                <h4 class="font-bold text-gray-800">1. Event Handling</h4>
+                                <p class="text-xs text-gray-500">Bấm phím? Click chuột? Quit?</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 bg-white p-3 rounded shadow-sm border-l-4 border-yellow-500">
+                            <span class="text-2xl">🧠</span>
+                            <div>
+                                <h4 class="font-bold text-gray-800">2. Game Logic</h4>
+                                <p class="text-xs text-gray-500">Cập nhật tọa độ x, y. Va chạm.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 bg-white p-3 rounded shadow-sm border-l-4 border-purple-500">
+                            <span class="text-2xl">🎨</span>
+                            <div>
+                                <h4 class="font-bold text-gray-800">3. Drawing</h4>
+                                <p class="text-xs text-gray-500">screen.fill() -> draw.rect() -> flip()</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Connector -->
+                <div class="hidden md:block arrow-right"></div>
+                <div class="md:hidden arrow-down"></div>
+
+                 <!-- Node End -->
+                 <div class="flex flex-col items-center z-10">
+                    <div class="w-32 h-32 bg-gray-800 text-white rounded-full flex flex-col items-center justify-center border-4 border-red-500 shadow-xl">
+                        <span class="text-2xl font-bold">QUIT</span>
+                        <span class="text-xs text-red-200 mt-1">Cleanup</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2 text-center w-32">Thoát & Dọn dẹp RAM</p>
+                </div>
+
+            </div>
+        </div>
+        
+        <div class="mt-8 bg-gray-900 rounded-xl p-6 text-green-400 font-mono text-sm overflow-x-auto shadow-inner">
+<pre>
+
+Code Khung Sườn Pygame
+import pygame pygame.init() screen = pygame.display.set_mode((800, 600)) running = True
+
+while running: # THE LOOP for event in pygame.event.get(): if event.type == pygame.QUIT: running = False
+
+# Logic &amp; Draw goes here...
+pygame.display.flip()
+pygame.quit() </pre>
+
+        </div>
+    </div>
+
+    <!-- View: Reality Check -->
+    <div id="view-reality" class="view-section hidden">
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Sự Thật Phũ Phàng: Python vs C++</h2>
+            <p class="text-lg text-gray-600">Tại sao Python dễ học nhưng lại bị chê là chậm? Hãy nhìn vào sự khác biệt giữa Thông dịch và Biên dịch.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div>
+                 <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+                    <h3 class="font-bold text-red-700">Gót Chân Achilles của Python</h3>
+                    <ul class="list-disc list-inside mt-2 text-red-600 text-sm space-y-1">
+                        <li><strong>Chậm & Lag:</strong> Vừa đọc vừa chạy (Interpreted).</li>
+                        <li><strong>Ngốn RAM:</strong> Quản lý bộ nhớ tự động, đôi khi lãng phí.</li>
+                        <li><strong>Không tối ưu phần cứng:</strong> Khó can thiệp sâu vào hệ thống.</li>
+                    </ul>
+                </div>
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4">
+                    <h3 class="font-bold text-blue-700">Lời Khuyên Cho Senior</h3>
+                    <p class="text-sm text-blue-600 mt-1">
+                        Nếu đam mê tối ưu phần cứng, Game Engine xịn -> <strong>Học thêm C++</strong>.
+                        <br>Nó là "quái thú" tốc độ, biên dịch trực tiếp ra mã máy.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow border border-gray-200">
+                <h3 class="text-center font-bold text-gray-700 mb-2">So Sánh Tốc Độ Thực Thi (Giả định)</h3>
+                <div class="chart-container">
+                    <canvas id="speedChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- Script Section -->
+<script>
+    // --- Navigation Logic ---
+    const tabs = [
+        { id: 'intro', label: '1. Why Python?', icon: '🐍' },
+        { id: 'syntax', label: '2. Cú Pháp', icon: '📝' },
+        { id: 'data', label: '3. Mảng & Data', icon: '📦' },
+        { id: 'logic', label: '4. Logic Lab', icon: '🧠' },
+        { id: 'pygame', label: '5. Game Dev', icon: '🎮' },
+        { id: 'reality', label: '6. Reality Check', icon: '⚖️' }
+    ];
+
+    function initNav() {
+        const navContainer = document.getElementById('nav-container');
+        const mobileNavContainer = document.getElementById('mobile-nav-container');
+
+        tabs.forEach(tab => {
+            // Desktop Nav
+            const btn = document.createElement('button');
+            btn.className = `px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out mx-1 inactive-tab nav-btn`;
+            btn.dataset.target = tab.id;
+            btn.innerHTML = `<span class="mr-1">${tab.icon}</span>${tab.label}`;
+            btn.onclick = () => switchTab(tab.id);
+            navContainer.appendChild(btn);
+
+            // Mobile Nav
+            const mBtn = document.createElement('button');
+            mBtn.className = "block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-50 text-left w-full";
+            mBtn.innerHTML = `${tab.icon} ${tab.label}`;
+            mBtn.onclick = () => { switchTab(tab.id); document.getElementById('mobile-menu').classList.add('hidden'); };
+            mobileNavContainer.appendChild(mBtn);
+        });
+    }
+
+    function switchTab(viewId) {
+        // Hide all sections
+        document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('animate-fade-in'));
+        
+        // Show target section
+        const target = document.getElementById(`view-${viewId}`);
+        if(target) {
+            target.classList.remove('hidden');
+            target.classList.add('animate-fade-in'); // Simple CSS animation class if defined
+        }
+
+        // Update Nav State
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            if(btn.dataset.target === viewId) {
+                btn.classList.add('active-tab');
+                btn.classList.remove('inactive-tab');
+            } else {
+                btn.classList.remove('active-tab');
+                btn.classList.add('inactive-tab');
+            }
+        });
+
+        // Trigger Chart resize if needed
+        if(viewId === 'data' && window.collectionChartInstance) window.collectionChartInstance.resize();
+        if(viewId === 'reality' && window.speedChartInstance) window.speedChartInstance.resize();
+    }
+
+    document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+
+
+    // --- Syntax View Logic ---
+    const codeSnippets = {
+        syntax: `# Indentation (Thụt đầu dòng) là bắt buộc
+if 5 > 2: print("Năm lớn hơn hai!") # Chuẩn 4 space if 3 > 1: print("Ba cũng lớn hơn một!")
+
+Dấu hai chấm (:) báo hiệu bắt đầu khối lệnh`,
+        variables: `# Khai báo biến không cần kiểu
+ten_ban = "Lê Minh Phúc" # String so_du = 50000 # Integer is_coding = True # Boolean
+
+Dynamic Typing: Đổi kiểu thoải mái
+so_du = "Hết tiền rồi" # Giờ nó là String, numbers: # Số học & Ép kiểu count = 10 # int price = 3.14 # float
+
+Casting (Ép kiểu)
+x = int("10") # "10" -> 10 y = str(100) # 100 -> "100" z = float(5) # 5 -> 5.0, strings: # Xử lý chuỗi text = "Python Monkey"
+
+Slicing
+print(text[0:6]) # "Python"
+
+f-string (Best Practice)
+name = "Phúc" print(f"Chào {name}, code vui không?")` };
+
+    const explanations = {
+        syntax: "Python dùng khoảng trắng để phân cấp code thay vì ngoặc nhọn {}. Sai một dấu cách là lỗi IndentationError ngay!",
+        variables: "Biến giống như cái hộp. Bạn có thể ném bất cứ thứ gì vào đó mà không cần khai báo trước nó là cái gì.",
+        numbers: "Cẩn thận khi cộng chuỗi với số. Hãy dùng int() hoặc str() để đưa về cùng một kiểu trước khi tính toán.",
+        strings: "F-string (f\"...\") là cách nhanh nhất và dễ đọc nhất để chèn biến vào trong câu văn."
+    };
+
+    function showCode(topic) {
+        document.getElementById('code-content').textContent = codeSnippets[topic];
+        document.getElementById('code-title').textContent = `${topic}_example.py`;
+        document.getElementById('code-explanation').textContent = explanations[topic];
+    }
+
+
+    // --- Logic Lab Simulators ---
+    function checkNetMoney() {
+        const money = parseInt(document.getElementById('net-money').value);
+        const resultDiv = document.getElementById('net-result');
+        let msg = "";
+        let colorClass = "";
+
+        if (isNaN(money)) {
+            msg = "Vui lòng nhập số tiền!";
+            colorClass = "border-gray-400 text-gray-700";
+        } else if (money >= 15000) {
+            msg = "✅ Đủ tiền chơi 3 tiếng, triển thôi Phúc ơi!";
+            colorClass = "border-green-500 bg-green-50 text-green-800";
+        } else if (money >= 5000) {
+            msg = "⚠️ Chơi được 1 tiếng rồi về nấu cơm kẻo Lan Anh mắng.";
+            colorClass = "border-yellow-500 bg-yellow-50 text-yellow-800";
+        } else {
+            msg = "🛑 Hết tiền rồi, về nhà học code tiếp thôi.";
+            colorClass = "border-red-500 bg-red-50 text-red-800";
+        }
+
+        resultDiv.className = `p-4 rounded border-l-4 min-h-[60px] flex items-center transition-all duration-300 ${colorClass}`;
+        resultDiv.innerHTML = msg;
+    }
+
+    function checkPassword() {
+        const input = document.getElementById('server-pass').value;
+        const resultDiv = document.getElementById('pass-result');
+        
+        if (input === "anhphuc2k7") {
+            resultDiv.innerHTML = "🔓 <strong>Mật khẩu chính xác!</strong><br>Đang kết nối với 10 chip Exynos...";
+            resultDiv.className = "bg-emerald-100 p-4 rounded border-l-4 border-emerald-500 text-emerald-800 min-h-[60px] flex items-center";
+        } else {
+            resultDiv.innerHTML = "❌ <strong>Sai rồi!</strong><br>While loop vẫn đang chạy...";
+            resultDiv.className = "bg-red-100 p-4 rounded border-l-4 border-red-500 text-red-800 min-h-[60px] flex items-center";
+        }
+    }
+
+    function runRollCall() {
+        const friends = ["Thành béo", "Nhật Nam", "Tuấn công nghệ", "Inka"];
+        const outputDiv = document.getElementById('loop-output');
+        outputDiv.innerHTML = "";
+        
+        friends.forEach((friend, index) => {
+            setTimeout(() => {
+                outputDiv.innerHTML += `> ${index + 1}. ${friend}: Có mặt!<br>`;
+                outputDiv.scrollTop = outputDiv.scrollHeight;
+            }, index * 800); // Simulate delay
+        });
+        
+        setTimeout(() => {
+             outputDiv.innerHTML += `> --- ĐIỂM DANH HOÀN TẤT ---`;
+             outputDiv.scrollTop = outputDiv.scrollHeight;
+        }, friends.length * 800);
+    }
+
+    // --- Charts Initialization ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initNav();
+        switchTab('intro'); // Start at Intro
+        showCode('syntax'); // Init code viewer
+
+        // Chart 1: Collections Comparison
+        const ctxCollection = document.getElementById('collectionChart').getContext('2d');
+        window.collectionChartInstance = new Chart(ctxCollection, {
+            type: 'bar',
+            data: {
+                labels: ['List []', 'Tuple ()', 'Dict {}', 'Set {}'],
+                datasets: [
+                    {
+                        label: 'Tính Linh Hoạt (Mutable)',
+                        data: [10, 0, 10, 8],
+                        backgroundColor: '#3B82F6'
+                    },
+                    {
+                        label: 'Tốc Độ Tra Cứu (Lookup)',
+                        data: [5, 6, 10, 9], // Dict/Set fast lookup
+                        backgroundColor: '#10B981'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true, max: 10, display: false } },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: (items) => items[0].label
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chart 2: Speed Comparison
+        const ctxSpeed = document.getElementById('speedChart').getContext('2d');
+        window.speedChartInstance = new Chart(ctxSpeed, {
+            type: 'bar',
+            data: {
+                labels: ['C++ (Biên Dịch)', 'Python (Thông Dịch)'],
+                datasets: [{
+                    label: 'Tốc độ thực thi (Điểm giả định)',
+                    data: [100, 20],
+                    backgroundColor: ['#DC2626', '#3B82F6'],
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { x: { beginAtZero: true } },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: (items) => items[0].label
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+</script>
+</body> </html>
